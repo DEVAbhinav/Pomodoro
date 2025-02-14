@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#e67e22">  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="apple-touch-icon" href="images/ios/180.png">
+    <link rel="apple-touch-icon" sizes="16x16" href="images/ios/16.png">
+    <link rel="apple-touch-icon" sizes="20x20" href="images/ios/20.png">
+    <link rel="apple-touch-icon" sizes="29x29" href="images/ios/29.png">
+    <link rel="apple-touch-icon" sizes="32x32" href="images/ios/32.png">
+    <link rel="apple-touch-icon" sizes="40x40" href="images/ios/40.png">
+    <link rel="apple-touch-icon" sizes="50x50" href="images/ios/50.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="images/ios/57.png">
+    <link rel="apple-touch-icon" sizes="58x58" href="images/ios/58.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="images/ios/60.png">
+    <link rel="apple-touch-icon" sizes="64x64" href="images/ios/64.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/ios/72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="images/ios/76.png">
+    <link rel="apple-touch-icon" sizes="80x80" href="images/ios/80.png">
+    <link rel="apple-touch-icon" sizes="87x87" href="images/ios/87.png">
+    <link rel="apple-touch-icon" sizes="100x100" href="images/ios/100.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/ios/114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="images/ios/120.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="images/ios/128.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="images/ios/144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="images/ios/152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="images/ios/167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/ios/180.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="images/ios/192.png">
+    <link rel="apple-touch-icon" sizes="256x256" href="images/ios/256.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="images/ios/512.png">
+    <link rel="apple-touch-icon" sizes="1024x1024" href="images/ios/1024.png">
+  
+  </head>
+<body>
+    <div class="container">
+        <div class="timer-display">
+            <span id="minutes">25</span>:<span id="seconds">00</span>
+        </div>
+        <div class="controls">
+            <button id="start" class="control-button"><i class="fas fa-play"></i></button>
+            <button id="stop" class="control-button"><i class="fas fa-stop"></i></button>
+            <button id="reset" class="control-button"><i class="fas fa-redo"></i></button>
+        </div>
+         <div class="settings">
+            <label for="work-duration">Work:</label>
+            <input type="number" id="work-duration" value="25" min="1" max="90">
+            <label for="break-duration">Break:</label>
+            <input type="number" id="break-duration" value="5" min="1" max="30">
+        </div>
+        <div class="mode-toggle">
+          <button id="work-mode" class="mode-button active">Work</button>
+          <button id="break-mode" class="mode-button">Break</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

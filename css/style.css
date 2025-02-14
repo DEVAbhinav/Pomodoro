@@ -1,109 +1,181 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f0f0f0; /* Light gray background */
+    background-color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    color: #333; /* Dark gray text */
+    color: #333;
 }
 
 .container {
     background-color: #fff;
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 50px 40px; /* Consistent padding */
     text-align: center;
     width: 90%;
     max-width: 400px;
 }
 
-.timer-display {
-    font-size: 4em;
-    font-weight: 300; /* Lighter font weight */
-    margin-bottom: 20px;
-    color: #e67e22; /* Pomodoro orange */
+.timer-container {
+    position: relative; /* Crucial for absolute positioning */
+    width: 250px; /*  Larger size */
+    height: 250px;
+    margin: 0 auto 40px; /* Center and add bottom margin */
+    display: flex;
+    justify-content: center; /* Center the timer display horizontally */
+    align-items: center;  /* Center the timer display vertically */
 }
 
+.timer-display {
+    font-size: 4.5em; /* Larger font size */
+    font-weight: 300;
+    color: #e67e22;
+    z-index: 2; /* Above the progress bar */
+    position: relative; /*  Needed for z-index */
+	transition: transform 0.3s ease, color 0.3s ease; /* Add transition for the animation */
+}
+/* Animation for the timer display*/
+.timer-display.running{
+	transform: scale(1.1);
+}
+
+/* Styles for the progress bar container (progressbar.js adds the SVG inside this) */
+#progress-bar-container {
+    position: absolute; /* Absolute positioning within .timer-container */
+    top: 0;
+    left: 0;
+    width: 100%; /* Take up the full container size */
+    height: 100%;
+    z-index: 1; /* Behind the timer display */
+}
+
+/* We don't need to style the SVG directly; progressbar.js handles that.
+   But we DO need to make sure it's displayed as a circle: */
+#progress-bar-container > svg { /* Target the SVG inside the container */
+    display: block; /*  Important for some browsers */
+    border-radius: 50%;  /* Ensure it's a circle */
+}
+.mode-label {
+  position: absolute;
+  top: 1rem; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.3em;
+  font-weight: 500;
+  color: #555;
+}
 .controls {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+	gap: 30px;
 }
 
 .control-button {
-    background-color: #e67e22; /* Pomodoro orange */
+    background-color: #e67e22;
     color: #fff;
     border: none;
-    border-radius: 50%; /* Circular buttons */
-    width: 60px;
-    height: 60px;
-    font-size: 1.5em;
+    border-radius: 50%;
+    width: 72px; /* Larger buttons */
+    height: 72px;
+    font-size: 2em; /* Larger icons */
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth hover effect */
-    display: flex; /* Center the icon */
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .control-button:hover {
-    background-color: #d35400; /* Darker orange on hover */
+    background-color: #d35400;
+    transform: scale(1.1);
 }
 
-.control-button:focus {
-    outline: none; /* Remove default focus outline */
+.control-button:active {
+    background-color: #b94a00;
+    transform: scale(1.05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.control-button:focus{
+	outline: none;
 }
 
 .settings {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    margin-bottom: 30px;
 }
 
 .settings label {
+    font-size: 1.2em;
     margin-right: 10px;
-    font-size: 1em;
 }
 
 .settings input[type="number"] {
-    width: 60px;
-    padding: 8px;
+    width: 70px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 1em;
+    font-size: 1.2em;
     text-align: center;
+	transition: border-color 0.3s ease;
 }
+.settings input[type="number"]:focus{
+	outline: none;
+	border-color: #e67e22;
+}
+
 .mode-toggle {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .mode-button {
-  background-color: #ddd;
-  color: #333;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 0 5px;
-  transition: background-color 0.3s ease;
+    background-color: #ddd;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px;
+	transition: background-color 0.3s ease;
 }
 
 .mode-button.active {
-  background-color: #e67e22;
-  color: #fff;
+    background-color: #e67e22;
+    color: #fff;
 }
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
     .container {
-        padding: 20px;
+        padding: 30px 20px; /* Less padding on small screens */
     }
-    .timer-display{
-        font-size: 3em;
+     .timer-container {
+        width: 180px; /* Adjust as needed */
+        height: 180px;
+    }
+
+    .timer-display {
+        font-size: 3.5em; /* Smaller font on small screens */
+    }
+	.control-button{
+		width: 55px;
+		height: 55px;
+        font-size: 1.8em;
+	}
+    .settings label,
+    .settings input[type="number"]{
+        font-size: 1.1em;
+    }
+     .settings input[type="number"]{
+        width: 60px;
     }
 }

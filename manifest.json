@@ -1,7 +1,7 @@
 {
   "name": "Pomodoro Timer PWA",
   "short_name": "Pomodoro",
-  "start_url": "/index.html?v=3",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#e67e22",

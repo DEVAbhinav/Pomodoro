@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="manifest" href="manifest.json?v=7">  <meta name="theme-color" content="#e67e22">
+    <link rel="manifest" href="manifest.json?v=8">
+    <meta name="theme-color" content="#4285F4">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <meta name="apple-mobile-web-app-capable" content="yes">
   </head>
-  <body>
+<body>
     <div class="container">
         <div class="timer-container">
             <div class="timer-display">
@@ -21,24 +22,38 @@
              <div class="mode-label">Work</div>
         </div>
 
-        <div class="controls">
-            <button id="start" class="control-button"><i class="fas fa-play"></i></button>
-            <button id="stop" class="control-button"><i class="fas fa-stop"></i></button>
-            <button id="reset" class="control-button"><i class="fas fa-redo"></i></button>
-
+        <div class="mode-toggle">
+          <button id="work-mode" class="mode-button active">Work</button>
+          <button id="break-mode" class="mode-button">Break</button>
         </div>
+
          <div class="settings">
             <label for="work-duration">Work:</label>
             <input type="number" id="work-duration" value="25" min="1" max="90">
             <label for="break-duration">Break:</label>
             <input type="number" id="break-duration" value="5" min="1" max="30">
         </div>
-        <div class="mode-toggle">
-          <button id="work-mode" class="mode-button active">Work</button>
-          <button id="break-mode" class="mode-button">Break</button>
+ 
+        <div class="controls">
+          <button id="start" class="control-button"><i class="fas fa-play"></i></button>
+          <button id="stop" class="control-button"><i class="fas fa-stop"></i></button>
+          <button id="reset" class="control-button"><i class="fas fa-redo"></i></button>
+
+      </div>
+
+
+        <div class="cycle-info">
+            <div>
+                <label for="cycle-target">Target Cycles:</label>
+                <input type="number" id="cycle-target" value="4" min="1" max="99">
+            </div>
+            <div>
+                <span>Cycles: </span><span id="cycle-count">0</span> / <span id="cycle-target-display">4</span>
+            </div>
         </div>
     </div>
+
+    <script src="js/app.js?v=5"></script>
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js@1.1.0/dist/progressbar.min.js"></script>
-    <script src="js/app.js?v=5" type="module"></script>
 </body>
 </html>

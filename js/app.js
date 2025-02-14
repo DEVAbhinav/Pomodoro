@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Constants (Good Practice: ALL_CAPS for constants) ---
+    // --- Constants ---
     const MINUTES_DISPLAY = document.getElementById('minutes');
     const SECONDS_DISPLAY = document.getElementById('seconds');
     const START_BUTTON = document.getElementById('start');
@@ -11,23 +11,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const BREAK_MODE_BUTTON = document.getElementById('break-mode');
     const MODE_LABEL = document.querySelector('.mode-label');
     const TIMER_DISPLAY = document.querySelector('.timer-display');
+    const CYCLE_COUNT_DISPLAY = document.getElementById('cycle-count'); // NEW
+    const CYCLE_TARGET_INPUT = document.getElementById('cycle-target');   // NEW
+    const CYCLE_TARGET_DISPLAY = document.getElementById('cycle-target-display'); //NEW
 
     // --- Variables ---
-    let timerInterval = null; // Initialize to null
+    let timerInterval = null;
     let timeLeft;
     let totalSeconds;
     let isWorkMode = true;
-    let circle; // Declare outside, initialize later
-    let animationPromise = null; // Store the animation Promise
-
+    let circle;
+    let animationPromise = null;
+    let cycleCount = 0; // NEW: Current cycle count
+    let cycleTarget = 4; // NEW: Default target
+    let lastResetDay = null; //NEW
 
     // --- Progress Bar Initialization ---
-    // Initialize *after* DOMContentLoaded (very important)
     circle = new ProgressBar.Circle('#progress-bar-container', {
         strokeWidth: 6,
         easing: 'easeInOut',
-        duration: 1000, // Keep at 1000ms
-        color: '#e67e22', // Initial color
+        duration: 1000,
+        color: '#4285F4', //  This color is overridden by the gradient
         trailColor: '#ddd',
         trailWidth: 1,
         svgStyle: {
@@ -36,9 +40,56 @@ document.addEventListener('DOMContentLoaded', () => {
             borderRadius: '50%'
         },
         text: {
-            autoStyleContainer: false // Good practice
+            autoStyleContainer: false
         },
+        step: (state, circle) => {
+            circle.path.setAttribute('stroke', isWorkMode ? 'url(#workGradient)' : 'url(#breakGradient)');
+        }
     });
+
+    // --- Add SVG Gradients (DEFINITIONS) ---
+    const svg = circle.svg;
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
+    const workGradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    workGradient.setAttribute('id', 'workGradient');
+    workGradient.setAttribute('x1', '0%');
+    workGradient.setAttribute('y1', '0%');
+    workGradient.setAttribute('x2', '100%');
+    workGradient.setAttribute('y2', '100%');
+
+    const stop1_work = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop1_work.setAttribute('offset', '0%');
+    stop1_work.setAttribute('stop-color', '#4285F4');
+    workGradient.appendChild(stop1_work);
+
+    const stop2_work = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop2_work.setAttribute('offset', '100%');
+    stop2_work.setAttribute('stop-color', '#e67e22');
+    workGradient.appendChild(stop2_work);
+    defs.appendChild(workGradient);
+
+    const breakGradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    breakGradient.setAttribute('id', 'breakGradient');
+    breakGradient.setAttribute('x1', '0%');
+    breakGradient.setAttribute('y1', '0%');
+    breakGradient.setAttribute('x2', '100%');
+    breakGradient.setAttribute('y2', '100%');
+
+
+    const stop1_break = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop1_break.setAttribute('offset', '0%');
+    stop1_break.setAttribute('stop-color', '#90caf9');
+    breakGradient.appendChild(stop1_break);
+
+    const stop2_break = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop2_break.setAttribute('offset', '100%');
+    stop2_break.setAttribute('stop-color', '#27ae60');
+    breakGradient.appendChild(stop2_break);
+    defs.appendChild(breakGradient);
+
+
+    svg.prepend(defs);
 
 
     // --- Helper Functions ---
@@ -50,126 +101,147 @@ document.addEventListener('DOMContentLoaded', () => {
         SECONDS_DISPLAY.textContent = String(seconds).padStart(2, '0');
     }
 
-   async function updateProgressBar() {
+    async function updateProgressBar() {
         const progress = totalSeconds > 0 ? timeLeft / totalSeconds : 0;
-
-        // Await any previous animation before starting a new one
         if (animationPromise) {
-            await animationPromise.catch(() => {}); // Ignore rejections, just wait
+            await animationPromise.catch(() => { });
         }
-
-        animationPromise = circle.animate(progress); // Store the new Promise
-
-        // Optional:  You *could* add a .then() here if you needed to do
-        // something *after* the animation completes, but it's not required
-        // for the basic timer functionality.
-        // animationPromise.then(() => { /* do something after animation */ });
+        animationPromise = circle.animate(progress);
     }
 
-      function setMode(mode) {
+    function setMode(mode) {
         isWorkMode = mode === 'work';
         const duration = isWorkMode ? parseInt(WORK_DURATION_INPUT.value) : parseInt(BREAK_DURATION_INPUT.value);
 
-        // *** KEY CHANGE: Use totalSeconds, not minutes * 60 ***
         totalSeconds = duration * 60;
         timeLeft = totalSeconds;
 
-        // Update progress bar color IMMEDIATELY
-        circle.path.setAttribute('stroke', isWorkMode ? '#e67e22' : '#27ae60');
-
         updateModeLabel();
         updateDisplay();
-        updateProgressBar(); // Update *immediately*
+        updateProgressBar();
         TIMER_DISPLAY.classList.remove('running');
 
         WORK_MODE_BUTTON.classList.toggle('active', isWorkMode);
         BREAK_MODE_BUTTON.classList.toggle('active', !isWorkMode);
 
-        // Update theme-color
-        document.querySelector('meta[name="theme-color"]').setAttribute("content", isWorkMode ? "#e67e22" : "#27ae60");
+        document.querySelector('meta[name="theme-color"]').setAttribute("content", isWorkMode ? "#4285F4" : "#90caf9");
     }
 
-      function updateModeLabel() {
+    function updateModeLabel() {
         MODE_LABEL.textContent = isWorkMode ? 'Work' : 'Break';
-      }
-
+    }
 
     function playNotificationSound() {
         const audio = new Audio('/notification.mp3');
         audio.play().catch(error => console.warn("Audio playback failed:", error));
     }
-
-    function saveSettings() {
+// --- save, load and update ---
+  function saveSettings() {
         localStorage.setItem('workDuration', WORK_DURATION_INPUT.value);
         localStorage.setItem('breakDuration', BREAK_DURATION_INPUT.value);
         localStorage.setItem('isWorkMode', isWorkMode);
+        localStorage.setItem('cycleCount', cycleCount); // NEW
+        localStorage.setItem('cycleTarget', cycleTarget); // NEW
+        localStorage.setItem('lastResetDay', lastResetDay);
     }
 
-    function loadSettings() {
+   function loadSettings() {
         const savedWorkDuration = localStorage.getItem('workDuration');
         const savedBreakDuration = localStorage.getItem('breakDuration');
         const savedIsWorkMode = localStorage.getItem('isWorkMode');
+        const savedCycleCount = localStorage.getItem('cycleCount'); // NEW
+        const savedCycleTarget = localStorage.getItem('cycleTarget'); // NEW
+        const savedLastResetDay = localStorage.getItem('lastResetDay');
+
 
         if (savedWorkDuration) WORK_DURATION_INPUT.value = savedWorkDuration;
         if (savedBreakDuration) BREAK_DURATION_INPUT.value = savedBreakDuration;
         if (savedIsWorkMode !== null) isWorkMode = savedIsWorkMode === 'true';
-    }
 
-    // --- Main Timer Logic ---
- function startTimer() {
-    // Prevent multiple timers
-    if (timerInterval) {
-      return;
-    }
-
-
-    TIMER_DISPLAY.classList.add('running');
-
-     // Initialize progress bar to current timeLeft
-    updateProgressBar();
-
-    timerInterval = setInterval(() => {
-        timeLeft--;
-         updateDisplay();
-        updateProgressBar(); // Update progress *every* second
-
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            playNotificationSound();
-            isWorkMode = !isWorkMode; // Toggle mode
-            setMode(isWorkMode ? 'work' : 'break');
-            startTimer();
+        if(savedCycleCount) cycleCount = parseInt(savedCycleCount,10);
+        if(savedCycleTarget) {
+            cycleTarget = parseInt(savedCycleTarget, 10);
+            CYCLE_TARGET_INPUT.value = cycleTarget;
         }
-    }, 1000);
+        if(savedLastResetDay) lastResetDay = parseInt(savedLastResetDay,10);
 
-    START_BUTTON.innerHTML = '<i class="fas fa-pause"></i>';
-}
+        updateCycleDisplay();
+    }
 
-function stopTimer() {
-    clearInterval(timerInterval);
-    timerInterval = null;
-    TIMER_DISPLAY.classList.remove('running');
-    START_BUTTON.innerHTML = '<i class="fas fa-play"></i>';
-}
+     function updateCycleDisplay() {
+        CYCLE_COUNT_DISPLAY.textContent = cycleCount;
+        CYCLE_TARGET_DISPLAY.textContent = cycleTarget;
+    }
 
-function resetTimer() {
-    stopTimer(); // Stop any running timer
-    setMode(isWorkMode ? 'work' : 'break'); // Reset to current mode
-}
+    function incrementCycleCount() {
+        cycleCount++;
+        updateCycleDisplay();
+        saveSettings(); // Save after incrementing
+        if (cycleCount >= cycleTarget) {
+          // alert("Congratulations! You've reached your daily Pomodoro target!"); // optional
+        }
+    }
+
+    function checkDailyReset() {
+        const today = new Date().getDate(); // Get just the day
+        if (lastResetDay !== today) {
+            cycleCount = 0; // Reset the count
+            lastResetDay = today; // Update lastResetDay
+             saveSettings();
+            updateCycleDisplay(); // Update display after reset
+        }
+    }
+    // --- Main Timer Logic ---
+    function startTimer() {
+        if (timerInterval) return;
+
+        TIMER_DISPLAY.classList.add('running');
+        updateProgressBar();
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateDisplay();
+            updateProgressBar();
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                playNotificationSound();
+                if (isWorkMode) {  // Only increment if it's the *end* of a *work* cycle
+                    incrementCycleCount();
+                }
+                isWorkMode = !isWorkMode;
+                setMode(isWorkMode ? 'work' : 'break');
+
+                startTimer();
+            }
+        }, 1000);
+
+        START_BUTTON.innerHTML = '<i class="fas fa-pause"></i>';
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        TIMER_DISPLAY.classList.remove('running');
+        START_BUTTON.innerHTML = '<i class="fas fa-play"></i>';
+    }
+
+    function resetTimer() {
+        stopTimer();
+        setMode(isWorkMode ? 'work' : 'break');
+    }
 
     // --- Event Listeners ---
-
     START_BUTTON.addEventListener('click', () => {
-    if (timerInterval) {
-      stopTimer();
-    } else {
-      startTimer();
-    }
-  });
+        if (timerInterval) {
+            stopTimer();
+        } else {
+            startTimer();
+        }
+    });
     STOP_BUTTON.addEventListener('click', stopTimer);
     RESET_BUTTON.addEventListener('click', resetTimer);
-
     WORK_DURATION_INPUT.addEventListener('change', () => {
         saveSettings();
         resetTimer();
@@ -178,20 +250,27 @@ function resetTimer() {
         saveSettings();
         resetTimer();
     });
-
     WORK_MODE_BUTTON.addEventListener('click', () => setMode('work'));
     BREAK_MODE_BUTTON.addEventListener('click', () => setMode('break'));
+    CYCLE_TARGET_INPUT.addEventListener('change', () => { // NEW
+        cycleTarget = parseInt(CYCLE_TARGET_INPUT.value, 10) || 1; // Ensure it's a number
+        if (cycleTarget < 1) cycleTarget = 1; // Minimum value
+         CYCLE_TARGET_INPUT.value = cycleTarget; //For max and min value.
+        updateCycleDisplay();
+        saveSettings();
+    });
+
 
     // --- Initialization ---
-
+    checkDailyReset(); // NEW: Check for reset *before* loading settings
     loadSettings();
-    setMode(isWorkMode ? 'work': 'break'); // Set initial mode and time
-
+    setMode(isWorkMode ? 'work' : 'break');
+     updateCycleDisplay();
 
     // --- Service Worker Registration ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js?v=7')  // CACHE BUST!
+            navigator.serviceWorker.register('/sw.js?v=9')
                 .then(registration => console.log('Service Worker registered! Scope is: ', registration.scope))
                 .catch(err => console.log('Service Worker registration failed: ', err));
         });

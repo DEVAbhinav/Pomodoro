@@ -1,107 +1,117 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f0f0f0;
+    background-color: #000;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 100vh; /* Use min-height, not height */
     margin: 0;
-    color: #333;
+    color: #fff;
+    padding: 20px; /* Keep body padding */
+    box-sizing: border-box;
 }
 
 .container {
-    background-color: #fff;
+    background-color: #121212;
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 50px 40px; /* Consistent padding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    padding: 40px; /* Slightly reduced top/bottom padding */
     text-align: center;
-    width: 90%;
+    width: 100%; /* Use full width */
     max-width: 400px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* KEY CHANGE: Distribute space vertically */
+    min-height: calc(100vh - 80px); /*  Adjust for body padding */
 }
 
 .timer-container {
-    position: relative; /* Crucial for absolute positioning */
-    width: 250px; /*  Larger size */
+    position: relative;
+    width: 250px;
     height: 250px;
-    margin: 0 auto 40px; /* Center and add bottom margin */
-    display: flex;
-    justify-content: center; /* Center the timer display horizontally */
-    align-items: center;  /* Center the timer display vertically */
-}
-
-.timer-display {
-    font-size: 4.5em; /* Larger font size */
-    font-weight: 300;
-    color: #e67e22;
-    z-index: 2; /* Above the progress bar */
-    position: relative; /*  Needed for z-index */
-	transition: transform 0.3s ease, color 0.3s ease; /* Add transition for the animation */
-}
-/* Animation for the timer display*/
-.timer-display.running{
-	transform: scale(1.1);
-}
-
-/* Styles for the progress bar container (progressbar.js adds the SVG inside this) */
-#progress-bar-container {
-    position: absolute; /* Absolute positioning within .timer-container */
-    top: 0;
-    left: 0;
-    width: 100%; /* Take up the full container size */
-    height: 100%;
-    z-index: 1; /* Behind the timer display */
-}
-
-/* We don't need to style the SVG directly; progressbar.js handles that.
-   But we DO need to make sure it's displayed as a circle: */
-#progress-bar-container > svg { /* Target the SVG inside the container */
-    display: block; /*  Important for some browsers */
-    border-radius: 50%;  /* Ensure it's a circle */
-}
-.mode-label {
-  position: absolute;
-  top: 1rem; /* Adjust as needed */
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.3em;
-  font-weight: 500;
-  color: #555;
-}
-.controls {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 40px;
-	gap: 30px;
-}
-
-.control-button {
-    background-color: #e67e22;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 72px; /* Larger buttons */
-    height: 72px;
-    font-size: 2em; /* Larger icons */
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    margin-bottom: 0; /* Remove bottom margin - flexbox handles spacing */
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.control-button:hover {
-    background-color: #d35400;
+.timer-display {
+    font-size: 4.5em;
+    font-weight: 300;
+    color: #4285F4;
+    z-index: 2;
+    position: relative;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.timer-display.running {
     transform: scale(1.1);
 }
 
-.control-button:active {
-    background-color: #b94a00;
-    transform: scale(1.05);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+#progress-bar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
-.control-button:focus{
-	outline: none;
+
+#progress-bar-container > svg {
+    display: block;
+    border-radius: 50%;
+}
+
+.mode-label {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.3em;
+    font-weight: 500;
+    color: #eee;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 0; /* Remove bottom margin */
+    width: 100%;
+    gap: 30px;
+}
+
+.control-button {
+    background-color: #4285F4;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 60px; /*  Smaller buttons */
+    height: 60px;
+    font-size: 1.8em; /*  Smaller icons */
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.control-button:hover {
+    background-color: #3367D6;
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.control-button:active {
+    background-color: #2a55b4;
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.control-button:focus {
+    outline: none;
 }
 
 .settings {
@@ -109,54 +119,111 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 0; /* Remove margin */
+    width: 100%;
 }
-
+.settings > div{
+    width: 48%;
+}
 .settings label {
-    font-size: 1.2em;
-    margin-right: 10px;
+    font-size: 1.1em; /*  Smaller font */
+    margin-right: 8px;
+    color: #eee;
 }
 
 .settings input[type="number"] {
-    width: 70px;
-    padding: 10px;
-    border: 1px solid #ddd;
+    width: 60px; /*  Smaller input */
+    padding: 8px;
+    border: 1px solid #333;
     border-radius: 5px;
-    font-size: 1.2em;
+    font-size: 1.1em; /*  Smaller font */
     text-align: center;
-	transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    background-color: #222;
+    color: #fff;
 }
-.settings input[type="number"]:focus{
-	outline: none;
-	border-color: #e67e22;
+
+.settings input[type="number"]:focus {
+    border-color: #4285F4;
+    outline: none;
+    background-color: #333;
 }
 
 .mode-toggle {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-bottom: 0; /*Remove the margin*/
+    margin-top: 20px; /* Reduced margin */
+    width: 100%;
 }
 
 .mode-button {
-    background-color: #ddd;
-    color: #333;
+    background-color: #333;
+    color: #fff;
     border: none;
-    padding: 10px 20px;
+    padding: 8px 16px; /*  Reduced padding */
     border-radius: 5px;
     cursor: pointer;
     margin: 0 5px;
-	transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
+    font-size: 0.9em; /*  Smaller font */
 }
 
 .mode-button.active {
-    background-color: #e67e22;
+    background-color: #4285F4;
     color: #fff;
 }
+
+/* Cycle Info Styles */
+.cycle-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+     margin-bottom: 0px; /* Remove spacing */
+    width: 100%;
+    color: #eee;
+    flex-wrap: wrap; /* Wrap on smaller screens */
+}
+
+.cycle-info label {
+    margin-right: 8px;
+    font-size: 1.1em; /*  Smaller font */
+}
+
+.cycle-info input[type="number"] {
+    width: 48px; /*  Smaller input */
+    padding: 6px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 1em;
+    text-align: center;
+    background-color: #222;
+    color: #fff;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.cycle-info input[type="number"]:focus {
+    border-color: #4285F4;
+    outline: none;
+}
+
+.cycle-info > div {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.cycle-info span {
+    font-size: 1.1em; /*  Smaller font */
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
     .container {
-        padding: 30px 20px; /* Less padding on small screens */
+        padding: 20px; /* Less padding on small screens */
+          min-height: calc(100vh - 40px); /* Adjust for body padding */
+
     }
      .timer-container {
         width: 180px; /* Adjust as needed */
@@ -164,18 +231,37 @@ body {
     }
 
     .timer-display {
-        font-size: 3.5em; /* Smaller font on small screens */
+        font-size: 3em; /* Adjust font size */
     }
-	.control-button{
-		width: 55px;
-		height: 55px;
+
+    .control-button {
+        width: 55px; /*  Smaller buttons */
+        height: 55px;
         font-size: 1.8em;
-	}
+    }
+
     .settings label,
-    .settings input[type="number"]{
-        font-size: 1.1em;
+    .settings input[type="number"],
+    .cycle-info label,
+    .cycle-info input[type="number"],
+    .cycle-info span,
+    .mode-button{
+        font-size: 1em; /*  Smaller font */
     }
-     .settings input[type="number"]{
-        width: 60px;
+
+    .settings input[type="number"], .cycle-info input[type="number"]{
+        width: 55px;
     }
+}
+
+/* Gradient Background (Optional) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom right, #000000, #121212);
+    z-index: -1;
 }

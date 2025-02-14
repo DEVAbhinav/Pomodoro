@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pomodoro-pwa-cache-v5'; // IMPORTANT: Update version number when you change files!
+const CACHE_NAME = 'pomodoro-pwa-cache-v6'; // IMPORTANT: Update version number when you change files!
 const urlsToCache = [
   '/',
   '/index.html',

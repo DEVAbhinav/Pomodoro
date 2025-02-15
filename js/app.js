@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const CYCLE_COUNT_DISPLAY = document.getElementById('cycle-count');
     const CYCLE_TARGET_INPUT = document.getElementById('cycle-target');
     const CYCLE_TARGET_DISPLAY = document.getElementById('cycle-target-display');
-    const THEME_SELECT = document.getElementById('theme-select'); // NEW
-    const MUSIC_SELECT = document.getElementById('music-select'); // NEW
+    const THEME_SELECT = document.getElementById('theme-select');
+    const MUSIC_SELECT = document.getElementById('music-select');
     const MUSIC_TOGGLE_BUTTON = document.getElementById('music-toggle'); // NEW
     const BG_MUSIC = document.getElementById('bg-music'); // NEW
 
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedCycleCount = localStorage.getItem('cycleCount');
         const savedCycleTarget = localStorage.getItem('cycleTarget');
         const savedTheme = localStorage.getItem('selectedTheme'); // NEW
-        const savedMusic = localStorage.getItem('selectedMusic'); // NEW
+        const savedMusic = localStorage.getItem('selectedMusic') || "ambient"; // NEW
         const savedLastResetDay = localStorage.getItem('lastResetDay');
 
 
@@ -224,10 +224,13 @@ document.addEventListener('DOMContentLoaded', () => {
             applyTheme(savedTheme); // Apply the loaded theme
         }
 
-        if (savedMusic) {
+        if (savedMusic && savedMusic !== 'none') {
             MUSIC_SELECT.value = savedMusic;
-            setMusic(savedMusic); // Apply the loaded music
+        } else {
+            MUSIC_SELECT.value = "ambient"; // Set default here
         }
+        setMusic(MUSIC_SELECT.value); // Set the music *after* setting the value
+
 
 
         updateCycleDisplay(); // NEW: Update the display on load

@@ -1,37 +1,89 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #000;
+    background-color: #000; /* Fallback */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Use min-height, not height */
+    min-height: 100vh;
     margin: 0;
     color: #fff;
-    padding: 20px; /* Keep body padding */
+    padding: 20px;
     box-sizing: border-box;
+    position: relative;
+    transition: background-image 0.5s ease; /* Smooth transition for background changes */
 }
+/* Remove body::before, now background will be set in JS */
 
 .container {
-    background-color: #121212;
+    background-color: rgba(18, 18, 18, 0.8);
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    padding: 40px; /* Slightly reduced top/bottom padding */
+    padding: 40px;
     text-align: center;
-    width: 100%; /* Use full width */
+    width: 100%;
     max-width: 400px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between; /* KEY CHANGE: Distribute space vertically */
-    min-height: calc(100vh - 80px); /*  Adjust for body padding */
+    justify-content: space-between;
+    min-height: calc(100vh - 80px);
+    position: relative; /* Add this for z-index to work */
+    z-index: 1; /* Make sure container is above background */
+}
+
+/* Add styles for new selection*/
+
+.theme-selection, .music-selection {
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.theme-selection label, .music-selection label {
+    color: #eee;
+    margin-right: 10px;
+    font-size: 1.1em;
+}
+
+.theme-selection select, .music-selection select {
+    padding: 8px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #222;
+    color: #fff;
+    font-size: 1em;
+}
+.theme-selection select:focus, .music-selection select:focus{
+    outline: none;
+     border-color: #4285F4;
+}
+
+/* Background Images (add more as needed)*/
+body.theme-nature {
+    background-image: url('images/background/nature.jpg'); /* Example path */
+    background-size: cover;
+    background-position: center;
+}
+
+body.theme-space {
+    background-image: url('images/background/space.jpg'); /* Example path */
+    background-size: cover;
+    background-position: center;
+}
+body.theme-abstract {
+    background-image: url('images/background/abstract.jpg'); /* Example path */
+    background-size: cover;
+    background-position: center;
 }
 
 .timer-container {
     position: relative;
     width: 250px;
     height: 250px;
-    margin-bottom: 0; /* Remove bottom margin - flexbox handles spacing */
+    margin-bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -65,19 +117,19 @@ body {
 }
 
 .mode-label {
-    position: absolute;
-    top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.3em;
-    font-weight: 500;
-    color: #eee;
+  position: absolute;
+  top: 1rem; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.3em;
+  font-weight: 500;
+  color: #eee;
 }
 
 .controls {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 0; /* Remove bottom margin */
+    margin-bottom: 0;
     width: 100%;
     gap: 30px;
 }
@@ -87,9 +139,9 @@ body {
     color: #fff;
     border: none;
     border-radius: 50%;
-    width: 60px; /*  Smaller buttons */
+    width: 60px;
     height: 60px;
-    font-size: 1.8em; /*  Smaller icons */
+    font-size: 1.8em;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
@@ -119,24 +171,25 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0; /* Remove margin */
+    margin-bottom: 0;
     width: 100%;
 }
 .settings > div{
     width: 48%;
 }
+
 .settings label {
-    font-size: 1.1em; /*  Smaller font */
+    font-size: 1.1em;
     margin-right: 8px;
     color: #eee;
 }
 
 .settings input[type="number"] {
-    width: 60px; /*  Smaller input */
+    width: 60px;
     padding: 8px;
     border: 1px solid #333;
     border-radius: 5px;
-    font-size: 1.1em; /*  Smaller font */
+    font-size: 1.1em;
     text-align: center;
     transition: border-color 0.3s ease, background-color 0.3s ease;
     background-color: #222;
@@ -152,8 +205,8 @@ body {
 .mode-toggle {
     display: flex;
     justify-content: center;
-    margin-bottom: 0; /*Remove the margin*/
-    margin-top: 20px; /* Reduced margin */
+    margin-bottom: 0;
+    margin-top: 20px;
     width: 100%;
 }
 
@@ -161,12 +214,12 @@ body {
     background-color: #333;
     color: #fff;
     border: none;
-    padding: 8px 16px; /*  Reduced padding */
+    padding: 8px 16px;
     border-radius: 5px;
     cursor: pointer;
     margin: 0 5px;
     transition: background-color 0.3s ease;
-    font-size: 0.9em; /*  Smaller font */
+    font-size: 0.9em;
 }
 
 .mode-button.active {
@@ -187,19 +240,19 @@ body {
 
 .cycle-info label {
     margin-right: 8px;
-    font-size: 1.1em; /*  Smaller font */
+    font-size: 1.1em;
 }
 
 .cycle-info input[type="number"] {
-    width: 48px; /*  Smaller input */
-    padding: 6px;
-    border: 1px solid #333;
-    border-radius: 5px;
+  width: 48px;
+  padding: 6px;
+  border: 1px solid #333;
+  border-radius: 5px;
     font-size: 1em;
     text-align: center;
     background-color: #222;
     color: #fff;
-    transition: border-color 0.3s ease, background-color 0.3s ease;
+     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .cycle-info input[type="number"]:focus {
@@ -209,12 +262,12 @@ body {
 
 .cycle-info > div {
     margin: 5px 0;
-    display: flex;
-    align-items: center;
+    display: flex; /* Use flexbox for inner alignment */
+    align-items: center; /* Vertical alignment */
 }
 
 .cycle-info span {
-    font-size: 1.1em; /*  Smaller font */
+    font-size: 1.1em;
 }
 
 
@@ -235,9 +288,9 @@ body {
     }
 
     .control-button {
-        width: 55px; /*  Smaller buttons */
+        width: 55px;
         height: 55px;
-        font-size: 1.8em;
+         font-size: 1.8em;
     }
 
     .settings label,
@@ -248,20 +301,7 @@ body {
     .mode-button{
         font-size: 1em; /*  Smaller font */
     }
-
-    .settings input[type="number"], .cycle-info input[type="number"]{
+     .settings input[type="number"], .cycle-info input[type="number"]{
         width: 55px;
     }
-}
-
-/* Gradient Background (Optional) */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom right, #000000, #121212);
-    z-index: -1;
 }

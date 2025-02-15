@@ -1,11 +1,15 @@
-const CACHE_NAME = 'pomodoro-pwa-cache-v6'; // IMPORTANT: Update version number when you change files!
+const CACHE_NAME = 'pomodoro-pwa-cache-v11'; // IMPORTANT: Update version number when you change files!
 const urlsToCache = [
   '/',
   '/index.html',
   '/css/style.css',
+  '/css/images/background/abstract.jpg',
+  '/css/images/background/nature.jpg',
+  '/css/images/background/space.jpg',
   '/js/app.js',
   '/manifest.json',
   '/notification.mp3', // Assuming you put it in root folder
+
   // Android Icons (include all sizes you're using in manifest.json)
   '/images/android/android-launchericon-48-48.png',
   '/images/android/android-launchericon-72-72.png',
@@ -44,6 +48,10 @@ const urlsToCache = [
   'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
   // Add any other files your app needs (images, data files, etc.)
+  // Music files, etc.
+  '/music/ambient.mp3',
+  '/music/classical.mp3',
+  '/music/lofi.mp3',
 ];
 
 // Install event: Cache the app shell

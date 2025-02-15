@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pomodoro-pwa-cache-v16'; // Increment!
+const CACHE_NAME = 'pomodoro-pwa-cache-v17'; // Increment!
 const urlsToCache = [
   '/',
   '/index.html',

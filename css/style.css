@@ -12,7 +12,15 @@ body {
     position: relative;
     transition: background-image 0.5s ease; /* Smooth transition for background changes */
 }
-/* Remove body::before, now background will be set in JS */
+
+.visually-hidden {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
 
 .container {
     background-color: rgba(18, 18, 18, 0.7);
